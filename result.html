@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Quiz Result - Adaptive Quiz</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body class="result-body">
+
+    <div class="result-container">
+
+
+        <!-- HEADER -->
+
+        <header class="result-header">
+
+            <a href="/" class="quiz-logo">
+
+                <div class="quiz-logo-icon">
+                    Q
+                </div>
+
+                <div class="quiz-logo-text">
+
+                    <strong>
+                        Adaptive Quiz
+                    </strong>
+
+                    <small>
+                        AI Learning
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <a href="/" class="result-home-button">
+                Dashboard
+            </a>
+
+        </header>
+
+
+
+        <!-- MAIN -->
+
+        <main class="result-main">
+
+
+            <!-- RESULT INTRO -->
+
+            <div class="result-intro">
+
+                <p class="result-label">
+                    QUIZ COMPLETED
+                </p>
+
+                <h1>
+                    Your quiz results
+                </h1>
+
+                <p class="result-subtitle">
+                    Review your performance and learn from your answers.
+                </p>
+
+            </div>
+
+
+
+            <!-- SCORE CARD -->
+
+            <section class="score-card">
+
+
+                <div class="score-circle">
+
+                    <div>
+
+                        <strong>
+                            {{ score }}
+                        </strong>
+
+                        <span>
+                            / {{ total }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="score-details">
+
+                    <p class="score-label">
+                        YOUR SCORE
+                    </p>
+
+                    <h2>
+                        {{ percentage|round(0) }}%
+                    </h2>
+
+                    <p class="performance-text">
+                        {{ performance }}
+                    </p>
+
+                    <p class="score-message">
+
+                        {% if percentage >= 80 %}
+
+                            Excellent work!
+                            You have a strong understanding
+                            of the topic.
+
+                        {% elif percentage >= 50 %}
+
+                            Good effort!
+                            Review the incorrect answers
+                            to strengthen your understanding.
+
+                        {% else %}
+
+                            Keep practicing!
+                            Review the explanations and
+                            try another quiz.
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- SUMMARY CARDS -->
+
+            <section class="result-summary">
+
+
+                <div class="summary-card">
+
+                    <div class="summary-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Correct
+                        </span>
+
+                        <strong>
+                            {{ score }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="summary-card">
+
+                    <div class="summary-icon wrong">
+                        ×
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Incorrect
+                        </span>
+
+                        <strong>
+                            {{ total - score }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="summary-card">
+
+                    <div class="summary-icon percentage">
+                        %
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Accuracy
+                        </span>
+
+                        <strong>
+                            {{ percentage|round(0) }}%
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- ANSWER REVIEW -->
+
+            <section class="review-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <p>
+                            ANSWER REVIEW
+                        </p>
+
+                        <h2>
+                            Review your answers
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+
+                {% for result in results %}
+
+                <article
+                    class="review-card
+                    {% if result.is_correct %}
+                        correct
+                    {% else %}
+                        incorrect
+                    {% endif %}">
+
+
+                    <!-- REVIEW HEADER -->
+
+                    <div class="review-header">
+
+                        <div class="review-question-number">
+
+                            <span>
+                                QUESTION
+                            </span>
+
+                            <strong>
+                                {{ result.question }}
+                            </strong>
+
+                        </div>
+
+
+                        {% if result.is_correct %}
+
+                        <span class="answer-status correct-status">
+                            ✓ Correct
+                        </span>
+
+                        {% else %}
+
+                        <span class="answer-status incorrect-status">
+                            × Incorrect
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- QUESTION -->
+
+                    <h3 class="review-question">
+
+                        {{ result.question_text }}
+
+                    </h3>
+
+
+
+                    <!-- USER ANSWER -->
+
+                    <div class="answer-box">
+
+                        <span class="answer-title">
+                            Your answer
+                        </span>
+
+                        <p>
+                            {% if result.user_answer %}
+                                {{ result.user_answer }}
+                            {% else %}
+                                Not answered
+                            {% endif %}
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- CORRECT ANSWER -->
+
+                    {% if not result.is_correct %}
+
+                    <div class="answer-box correct-answer-box">
+
+                        <span class="answer-title">
+                            Correct answer
+                        </span>
+
+                        <p>
+                            {{ result.correct_answer }}
+                        </p>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    <!-- EXPLANATION -->
+
+                    <div class="explanation-box">
+
+                        <strong>
+                            💡 Explanation
+                        </strong>
+
+                        <p>
+                            {{ result.explanation }}
+                        </p>
+
+                    </div>
+
+
+                </article>
+
+                {% endfor %}
+
+            </section>
+
+
+
+            <!-- ACTION BUTTONS -->
+
+            <section class="result-actions">
+
+                <a href="/" class="secondary-result-button">
+
+                    ← Back to Dashboard
+
+                </a>
+
+
+                <a href="/" class="primary-result-button">
+
+                    Take Another Quiz →
+
+                </a>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

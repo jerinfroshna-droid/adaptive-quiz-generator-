@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Take Quiz - Adaptive Quiz</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+```
+
+</head>
+
+<body class="quiz-body">
+
+<div class="quiz-container">
+
+```
+<!-- TOP HEADER -->
+
+<header class="quiz-header">
+
+    <a href="/" class="quiz-logo">
+
+        <div class="quiz-logo-icon">
+            Q
+        </div>
+
+        <div>
+            <strong>Adaptive Quiz</strong>
+            <small>AI Learning</small>
+        </div>
+
+    </a>
+
+
+    <div class="quiz-header-right">
+
+        <span class="difficulty-badge">
+            {{ difficulty }}
+        </span>
+
+        <a href="/" class="exit-button">
+            Exit Quiz
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- QUIZ CONTENT -->
+
+<main class="quiz-main">
+
+
+    <!-- QUIZ INTRO -->
+
+    <div class="quiz-intro">
+
+        <div>
+
+            <p class="quiz-label">
+                AI GENERATED QUIZ
+            </p>
+
+            <h1>
+                Test your knowledge
+            </h1>
+
+        </div>
+
+
+        <div class="question-count">
+
+            <strong id="currentQuestion">
+                1
+            </strong>
+
+            <span>
+                /
+                {{ questions|length }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PROGRESS BAR -->
+
+    <div class="progress-area">
+
+        <div class="progress-bar">
+
+            <div
+                class="progress-fill"
+                id="progressFill">
+            </div>
+
+        </div>
+
+        <span id="progressText">
+            1 of {{ questions|length }}
+        </span>
+
+    </div>
+    <div id="quizData" data-total="{{ questions|length }}"></div>
+
+
+
+    <!-- QUIZ FORM -->
+
+    <form
+        action="/submit"
+        method="POST"
+        id="quizForm">
+
+
+        {% for question in questions %}
+
+        <section
+            class="question-card"
+            data-question="{{ loop.index }}"
+            {% if not loop.first %}
+            style="display:none;"
+            {% endif %}>
+
+
+            <!-- QUESTION NUMBER -->
+
+            <div class="question-top">
+
+                <span class="question-number">
+                    QUESTION {{ loop.index }}
+                </span>
+
+                <span class="question-points">
+                    1 point
+                </span>
+
+            </div>
+
+
+
+            <!-- QUESTION -->
+
+            <h2 class="question-text">
+
+                {{ question.question }}
+
+            </h2>
+
+
+
+            <!-- ANSWERS -->
+
+            <div class="answer-options">
+
+
+                {<div class="answer-options">
+
+    {% for option in question.options %}
+
+    <div class="answer-option"
+         onclick="selectOption(this)">
+
+        <input
+            type="radio"
+            name="question_{{ loop.index0 }}"
+            value="{{ option }}">
+
+        <span class="option-letter">
+            {{ ["A", "B", "C", "D"][loop.index0] }}
+        </span>
+
+        <span class="option-text">
+            {{ option }}
+        </span>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+            <!-- NAVIGATION -->
+
+            <div class="question-navigation">
+
+
+                {% if not loop.first %}
+
+                <button
+                    type="button"
+                    class="previous-button"
+                    onclick="previousQuestion()">
+
+                    ← Previous
+
+                </button>
+
+                {% else %}
+
+                <div></div>
+
+                {% endif %}
+
+
+
+                {% if not loop.last %}
+
+                <button
+                    type="button"
+                    class="next-button"
+                    onclick="nextQuestion()">
+
+                    Next →
+
+                </button>
+
+                {% else %}
+
+                <button
+                    type="submit"
+                    class="submit-button">
+
+                    ✓ Submit Quiz
+
+                </button>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </section>
+
+        {% endfor %}
+
+
+    </form>
+
+
+    <!-- QUIZ TIP -->
+
+    <div class="quiz-tip">
+
+        <span>💡</span>
+
+        <div>
+
+            <strong>Think before you answer</strong>
+
+            <p>
+                Read the question carefully and choose
+                the option that best matches your understanding.
+            </p>
+
+        </div>
+
+    </div>
+
+
+</main>
+```
+
+</div>
+<script>
+
+let currentQuestion = 1;
+
+const quizData = document.getElementById("quizData");
+
+const totalQuestions = Number(
+    quizData.getAttribute("data-total")
+);
+
+
+function showQuestion(number) {
+
+    const cards =
+        document.querySelectorAll(".question-card");
+
+    cards.forEach(function(card) {
+        card.style.display = "none";
+    });
+
+    const selectedCard =
+        document.querySelector(
+            '.question-card[data-question="' + number + '"]'
+        );
+
+    if (selectedCard) {
+        selectedCard.style.display = "block";
+    }
+
+    document.getElementById("currentQuestion")
+        .textContent = number;
+
+    document.getElementById("progressText")
+        .textContent =
+        number + " of " + totalQuestions;
+
+    const percentage =
+        (number / totalQuestions) * 100;
+
+    document.getElementById("progressFill")
+        .style.width = percentage + "%";
+}
+
+
+function selectOption(optionElement) {
+
+    const questionCard =
+        optionElement.closest(".question-card");
+
+    const options =
+        questionCard.querySelectorAll(".answer-option");
+
+    options.forEach(function(option) {
+
+        option.classList.remove("selected");
+
+        const radio =
+            option.querySelector("input[type='radio']");
+
+        if (radio) {
+            radio.checked = false;
+        }
+    });
+
+    optionElement.classList.add("selected");
+
+    const selectedRadio =
+        optionElement.querySelector("input[type='radio']");
+
+    if (selectedRadio) {
+        selectedRadio.checked = true;
+    }
+}
+
+
+function nextQuestion() {
+
+    const currentCard =
+        document.querySelector(
+            '.question-card[data-question="' +
+            currentQuestion +
+            '"]'
+        );
+
+    if (!currentCard) {
+        return;
+    }
+
+    const selectedAnswer =
+        currentCard.querySelector(
+            "input[type='radio']:checked"
+        );
+
+    if (!selectedAnswer) {
+        alert("Please select an answer before continuing.");
+        return;
+    }
+
+    if (currentQuestion < totalQuestions) {
+
+        currentQuestion++;
+
+        showQuestion(currentQuestion);
+    }
+}
+
+
+function previousQuestion() {
+
+    if (currentQuestion > 1) {
+
+        currentQuestion--;
+
+        showQuestion(currentQuestion);
+    }
+}
+
+
+if (totalQuestions > 0) {
+    showQuestion(1);
+}
+
+</script>
+
+
+</body>
+
+</html>

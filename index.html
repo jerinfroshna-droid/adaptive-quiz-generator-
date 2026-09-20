@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Adaptive Quiz Generator</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+```
+
+</head>
+
+<body>
+
+<div class="app-container">
+
+```
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">Q</div>
+        <div>
+            <h2>Adaptive Quiz</h2>
+            <span>AI Learning</span>
+        </div>
+    </div>
+
+    <nav class="navigation">
+
+        <a href="/" class="nav-item active">
+            <span>⌂</span>
+            Dashboard
+        </a>
+
+        <a href="#upload" class="nav-item">
+            <span>📄</span>
+            My Materials
+        </a>
+
+        <a href="#upload" class="nav-item">
+            <span>🎯</span>
+            Generate Quiz
+        </a>
+
+        <a href="#" class="nav-item">
+            <span>📊</span>
+            Performance
+        </a>
+
+        <a href="#" class="nav-item">
+            <span>🕘</span>
+            Quiz History
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <a href="#" class="nav-item">
+            <span>⚙</span>
+            Settings
+        </a>
+
+        <div class="ai-status">
+            <span class="status-dot"></span>
+            <div>
+                <strong>AI Ready</strong>
+                <small>Gemini connected</small>
+            </div>
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+
+        <div>
+            <p class="welcome-small">WELCOME BACK 👋</p>
+            <h1>Ready to learn something new?</h1>
+        </div>
+
+        <div class="profile">
+            <div class="profile-avatar">J</div>
+            <div>
+                <strong>Student</strong>
+                <small>Learning Mode</small>
+            </div>
+        </div>
+
+    </header>
+
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <span class="ai-badge">
+                ✦ POWERED BY AI
+            </span>
+
+            <h2>
+                Turn your study material
+                <span>into intelligent quizzes.</span>
+            </h2>
+
+            <p>
+                Upload your notes or PDF and let AI create
+                personalized questions based on your selected
+                difficulty.
+            </p>
+
+            <a href="#upload" class="primary-button">
+                Generate Your Quiz →
+            </a>
+
+        </div>
+
+        <div class="hero-visual">
+
+            <div class="floating-card card-one">
+                <span>✓</span>
+                <div>
+                    <strong>AI Generated</strong>
+                    <small>Questions ready</small>
+                </div>
+            </div>
+
+            <div class="brain-circle">
+                🧠
+            </div>
+
+            <div class="floating-card card-two">
+                <span>⚡</span>
+                <div>
+                    <strong>Adaptive</strong>
+                    <small>Difficulty adjusts</small>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- STAT CARDS -->
+    <section class="stats">
+
+        <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div>
+                <span>Study Materials</span>
+                <strong>0</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div>
+                <span>Quizzes Taken</span>
+                <strong>0</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div>
+                <span>Average Score</span>
+                <strong>—</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🔥</div>
+            <div>
+                <span>Learning Streak</span>
+                <strong>0 days</strong>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- UPLOAD SECTION -->
+    <section class="upload-section" id="upload">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">START LEARNING</p>
+                <h2>Upload your study material</h2>
+                <p>
+                    Give the AI your learning material and
+                    generate a customized quiz.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form action="/generate" method="POST" enctype="multipart/form-data">
+
+            <div class="upload-card">
+
+                <div class="upload-icon">
+                    📄
+                </div>
+
+                <h3>Drop your PDF here</h3>
+
+                <p>
+                    or click the button below to browse your files
+                </p>
+
+                <label for="pdf" class="browse-button">
+                    Browse PDF
+                </label>
+
+                <input
+                    type="file"
+                    id="pdf"
+                    name="pdf"
+                    accept=".pdf"
+                    required
+                >
+
+                <p class="file-info">
+                    PDF files only
+                </p>
+
+            </div>
+
+
+            <!-- QUIZ SETTINGS -->
+
+            <div class="quiz-settings">
+
+                <div class="setting-group">
+
+                    <label for="number_questions">
+                        Number of Questions
+                    </label>
+
+                    <select
+                        id="number_questions"
+                        name="number_questions"
+                    >
+                        <option value="5">5 Questions</option>
+                        <option value="10">10 Questions</option>
+                        <option value="15">15 Questions</option>
+                        <option value="20">20 Questions</option>
+                    </select>
+
+                </div>
+
+
+                <div class="setting-group">
+
+                    <label for="difficulty">
+                        Difficulty Level
+                    </label>
+
+                    <select
+                        id="difficulty"
+                        name="difficulty"
+                    >
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <button type="submit" class="generate-button">
+                ✦ Generate AI Quiz
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+    <section class="how-section">
+
+        <div class="section-heading center">
+
+            <p class="section-label">HOW IT WORKS</p>
+
+            <h2>From notes to quiz in seconds</h2>
+
+        </div>
+
+
+        <div class="steps">
+
+            <div class="step">
+
+                <div class="step-number">01</div>
+
+                <div class="step-icon">📄</div>
+
+                <h3>Upload</h3>
+
+                <p>
+                    Upload your PDF study material.
+                </p>
+
+            </div>
+
+
+            <div class="step-line"></div>
+
+
+            <div class="step">
+
+                <div class="step-number">02</div>
+
+                <div class="step-icon">🤖</div>
+
+                <h3>AI Analysis</h3>
+
+                <p>
+                    AI analyzes the important concepts.
+                </p>
+
+            </div>
+
+
+            <div class="step-line"></div>
+
+
+            <div class="step">
+
+                <div class="step-number">03</div>
+
+                <div class="step-icon">🎯</div>
+
+                <h3>Quiz</h3>
+
+                <p>
+                    Answer your personalized questions.
+                </p>
+
+            </div>
+
+
+            <div class="step-line"></div>
+
+
+            <div class="step">
+
+                <div class="step-number">04</div>
+
+                <div class="step-icon">📊</div>
+
+                <h3>Improve</h3>
+
+                <p>
+                    Track your performance and improve.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+```
+
+</div>
+
+<!-- FILE NAME DISPLAY -->
+
+<script>
+
+const fileInput = document.getElementById("pdf");
+
+fileInput.addEventListener("change", function () {
+
+    if (this.files.length > 0) {
+
+        const fileName = this.files[0].name;
+
+        document.querySelector(".upload-card h3").textContent =
+            fileName;
+
+        document.querySelector(".upload-card p").textContent =
+            "PDF selected successfully ✓";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
